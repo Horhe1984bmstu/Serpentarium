@@ -1,0 +1,744 @@
+using System;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO; 
+
+namespace algorithms
+{
+    class Program
+    {
+
+        static long[] array;
+        static long[] array_01;
+        static long[] array_02;
+
+
+        static string path_in = @"c:\task\";
+        static string path_out = @"c:\task\отсортированные массивы\";
+        static string task = "0";
+        
+        
+        static void Main(string[] args)
+        {
+            int quantity = 0;
+
+            int kind;                                                       //тип сортировки в массивах
+            int max_lenght = 7;                                             //количество массивов
+            int[] lenght = { 100, 500, 1000, 5000, 10000, 50000, 100000 };  //массив длин массивов
+
+            array = new long[100000];
+            array_01 = array;
+            array_02 = array;
+
+
+
+            Stopwatch stopWatch_01 = new Stopwatch(); //метод фиксации времени
+            stopWatch_01.Start();
+            Console.WriteLine("алгоритм -выбором- запущен, идет работа...");
+
+            for (int i = 0; i < max_lenght; i++)
+            {
+                quantity = lenght[i];
+                for (int j = 0; j < 3; j++)
+                {
+                    GenerateArray(quantity, j);                   
+                    stopWatch_01.Start();
+                    SelectionSorting(quantity);
+                    stopWatch_01.Stop();
+                    TimeSpan ts = stopWatch_01.Elapsed;
+                    string elapsedTime = String.Format(" время сортировки {0:00}:{1:00}.{2:00} " +
+                    "минут : секунд : мил.секунд", ts.Minutes, ts.Seconds, ts.Milliseconds);
+                    stopWatch_01.Reset();
+                    WriteFile_Selection_Sorting(quantity, j, elapsedTime);
+                }
+            }
+            Console.WriteLine("\nфайлы отсортированы {0}", path_out);
+
+            Console.ReadKey();
+
+
+
+            Stopwatch stopWatch_02 = new Stopwatch();
+            stopWatch_02.Start();
+            Console.WriteLine("\nалгоритм -вставками- запущен, идет работа...");
+
+            for (int i = 0; i < max_lenght; i++)
+            {
+                quantity = lenght[i];
+                for (int j = 0; j < 3; j++)
+                {
+                    GenerateArray(quantity, j);
+                    stopWatch_02.Start();
+                    InsertionSorting(quantity);
+                    stopWatch_02.Stop();
+                    TimeSpan ts = stopWatch_02.Elapsed;
+                    string elapsedTime = String.Format(" время сортировки {0:00}:{1:00}.{2:00} " +
+                    "минут : секунд : мил.секунд", ts.Minutes, ts.Seconds, ts.Milliseconds);
+                    stopWatch_02.Reset();
+                    WriteFile_Insertion_Sorting(quantity, j, elapsedTime); 
+                }
+            }
+            Console.WriteLine("\nмассивы отсортированы {0}", path_out);
+
+            Console.ReadKey();
+
+
+
+            Stopwatch stopWatch_03 = new Stopwatch();
+            stopWatch_03.Start();
+            Console.WriteLine("\nалгоритм -Шелла- запущен, идет работа...");
+
+            for (int i = 0; i < max_lenght; i++)
+            {
+                quantity = lenght[i];
+                for (int j = 0; j < 3; j++)
+                {
+                    GenerateArray(quantity, j);
+                    stopWatch_03.Start();
+                    ShellSorting(quantity);
+                    stopWatch_03.Stop();
+                    TimeSpan ts = stopWatch_03.Elapsed;
+                    string elapsedTime = String.Format(" время сортировки {0:00}:{1:00}.{2:00} " +
+                    "минут : секунд : мил.секунд", ts.Minutes, ts.Seconds, ts.Milliseconds);
+                    stopWatch_03.Reset();
+                    WriteFile_Shell_Sorting(quantity, j, elapsedTime);
+                }
+            }
+            Console.WriteLine("\nмассивы отсортированы {0}", path_out);
+
+            Console.ReadKey();
+
+
+
+            Stopwatch stopWatch_04 = new Stopwatch();
+            stopWatch_04.Start();
+            Console.WriteLine("\nалгоритм -quick sort- запущен, идет работа...");
+
+            for (int i = 0; i < max_lenght; i++)
+            {
+                quantity = lenght[i];
+                for (int j = 0; j < 3; j++)
+                {
+                    GenerateArray(quantity, j);
+                    stopWatch_04.Start();
+                    QuickSorting(0, quantity - 1);
+                    stopWatch_04.Stop();
+                    TimeSpan ts = stopWatch_04.Elapsed;
+                    string elapsedTime = String.Format(" время сортировки {0:00}:{1:00}.{2:00} " +
+                        "минут : секунд : мил.секунд", ts.Minutes, ts.Seconds, ts.Milliseconds);
+                    stopWatch_04.Reset();
+                    WriteFile_Quick_Sorting(quantity, j, elapsedTime); 
+                }
+            }
+            Console.WriteLine("\nмассивы отсортированы {0}", path_out);
+
+            Console.ReadKey();
+
+
+
+            Stopwatch stopWatch_05 = new Stopwatch();
+            stopWatch_05.Start();
+            Console.WriteLine("\nалгоритм -слияния- запущен, идет работа...");
+
+            for (int i = 0; i < max_lenght; i++)
+            {
+                quantity = lenght[i];
+                for (int j = 0; j < 3; j++)
+                {
+                    array_01 = array;
+                    GenerateArray_01(quantity, j);
+                    stopWatch_05.Start();
+                    array_01 = Sorting(array_01, quantity);
+                    stopWatch_05.Stop();
+                    TimeSpan ts = stopWatch_05.Elapsed;
+                    string elapsedTime = String.Format(" время сортировки {0:00}:{1:00}.{2:00} " +
+                    "минут : секунд : мил.секунд", ts.Minutes, ts.Seconds, ts.Milliseconds);
+                    stopWatch_05.Reset();
+                    WriteFile_Merge_Sorting(quantity, j, elapsedTime);
+                }
+            }
+            Console.WriteLine("\nмассивы отсортированы {0}", path_out);
+
+            Console.ReadKey();
+
+
+
+            Stopwatch stopWatch_06 = new Stopwatch();
+            stopWatch_06.Start();
+            Console.WriteLine("\nалгоритм -radix sort- запущен, идет работа...");
+
+            for (int i = 0; i < max_lenght; i++)
+            {
+                quantity = lenght[i];
+                for (int j = 0; j < 3; j++)
+                {
+                    array_02 = array; 
+                    GenerateArray_02(quantity, j);
+                    stopWatch_06.Start();
+                    RadixSort(array, quantity);
+                    stopWatch_06.Stop();
+                    TimeSpan ts = stopWatch_06.Elapsed;
+                    string elapsedTime = String.Format(" время сортировки {0:00}:{1:00}.{2:00} " +
+                        "минут : секунд : мил.секунд", ts.Minutes, ts.Seconds, ts.Milliseconds);
+                    stopWatch_06.Reset();
+                    WriteFile_Radix_Sorting(quantity, j, elapsedTime); 
+                }
+            }
+            Console.WriteLine("\nмассивы отсортированы {0}", path_out);
+
+
+
+        }
+         
+        static int GenerateArray(int quantity, int kind) //генерация массива
+        {
+            string binary;//число из текстового формата в двоичный
+            string path = path_in;
+
+            
+            if (kind is 3)  path = path + "результат_теста.txt";
+            else
+            {
+                                 path = path + quantity.ToString() + "_";
+            if      (kind is 0)  path = path + "худший_вариант.txt";
+            else if (kind is 1)  path = path + "средний_вариант.txt";
+            else                 path = path + "лучший_вариант.txt";
+            }
+            FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+            StreamReader reader = new StreamReader(stream); 
+            int j = 0;
+            while (true)
+            {
+            if (reader.EndOfStream) break;          //конец файла - завершаем цикл
+            binary = reader.ReadLine();             //считываем из файла в строковые данные
+            long.TryParse(binary, out array[j]);    //преобразуем строковые данные в long и пишем в array[j]
+            j++;
+            }
+            return j;                               //кол-во прочитанных чисел
+        }
+
+
+        static int GenerateArray_01(int quantity, int kind)
+        {
+            string binary;//число из текстового формата в двоичный
+            string path = path_in;
+
+            
+            if (kind is 3)  path = path + "результат_теста.txt";
+            else
+            {
+                                 path = path + quantity.ToString() + "_";
+            if      (kind is 0)  path = path + "худший_вариант.txt";
+            else if (kind is 1)  path = path + "средний_вариант.txt";
+            else                 path = path + "лучший_вариант.txt";
+            }
+            FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+            StreamReader reader = new StreamReader(stream); 
+            int j = 0;
+            while (true)
+            {
+            if (reader.EndOfStream) break;          //конец файла - завершаем цикл
+            binary = reader.ReadLine();             //считываем из файла в строковые данные
+            long.TryParse(binary, out array_01[j]);    //преобразуем строковые данные в long и пишем в array[j]
+            j++;
+            }
+            return j;                               //кол-во прочитанных чисел
+        }
+
+
+        static int GenerateArray_02(int quantity, int kind)
+         {
+            string binary;//число из текстового формата в двоичный
+            string path = path_in;
+
+            
+            if (kind is 3)  path = path + "результат_теста.txt";
+            else
+            {
+                                 path = path + quantity.ToString() + "_";
+            if      (kind is 0)  path = path + "худший_вариант.txt";
+            else if (kind is 1)  path = path + "средний_вариант.txt";
+            else                 path = path + "лучший_вариант.txt";
+            }
+            FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+            StreamReader reader = new StreamReader(stream); 
+            int j = 0;
+            while (true)
+            {
+            if (reader.EndOfStream) break;          //конец файла - завершаем цикл
+            binary = reader.ReadLine();             //считываем из файла в строковые данные
+            long.TryParse(binary, out array_02[j]);    //преобразуем строковые данные в long и пишем в array[j]
+            j++;
+            }
+            return j;                               //кол-во прочитанных чисел
+        }
+
+
+
+        // АЛГОРИТМЫ СОРТИРОВКИ
+
+       
+        static void SelectionSorting(int length) //Сортировка методом "выбора"
+        {
+            for (int i = 0; i < length - 1; i++)
+            {
+                int min_i = i;
+                for (int j = i + 1; j < length; j++)
+                {
+                if (array[j] < array[min_i])
+                {
+                min_i = j;
+                }
+                }
+                if (min_i != i)
+                {
+                long temp    = array[i];
+                array[i]     = array[min_i];
+                array[min_i] = temp;
+                }
+            }
+        }
+
+        
+        static void InsertionSorting(int length) //Сортировка методом "вставок"
+        {
+            for (int i = 1; i < length; i++)
+            {
+                long temp = array[i];
+                int j = i - 1;
+                int k = j;
+                while ((array[j] > temp) && (k >= 0))
+                {
+                array[j + 1] = array[j];
+                k--;
+                if (j > 0) j--;
+                }
+                j = k;
+                array[j + 1] = temp;
+            }
+        }
+
+        
+        static void ShellSorting(int length) //Сортировка методом "Шелла"
+        {
+            int h = 0;
+            for (h = 1; h <= length / 9; h = 3 * h + 1);
+
+            for (; h > 0; h /= 3)
+            {
+                for (int i = h; i < length; ++i)
+                {
+                int j = i;
+                long temp = array[i];
+                while (j >= h && temp < array[j - h])
+                {
+                array[j] = array[j - h];
+                j -= h;
+                }
+                array[j] = temp;
+                }
+            }
+        }
+
+        
+        static void QuickSorting(int first, int last) //Сортировка методом "quick sort"
+        {
+            long p = array[(first + last) / 2];
+            long temp;
+            int i = first, j = last;
+            while (i <= j)
+            {
+                while (array[i] < p && i <= last) ++i;
+                while (array[j] > p && j >= first) --j;
+                if (i <= j)
+                {
+                temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+                ++i; --j;
+                }
+            }
+            if (j > first) QuickSorting(first, j);
+            if (i < last)  QuickSorting(i, last);
+        }
+
+        
+        static long[] Sorting(long[] buff, int count) //Сортировка методом "слияния"
+        {
+            if (count > 1) //если длина равна 1 - сортировка не нужна 
+            {
+                long[] left = new long[count / 2];
+                long[] right = new long[count - left.Length];
+
+                for (int i = 0; i < left.Length; i++)
+                {
+                left[i] = buff[i];
+                }
+                for (int i = 0; i < right.Length; i++)
+                {
+                right[i] = buff[left.Length + i];
+                }
+                if (left.Length > 1)
+                    left = Sorting(left, left.Length);
+                if (right.Length > 1)
+                    right = Sorting(right, right.Length);
+                    buff = MergeSort(left, right);
+            }
+            return buff;
+        }
+        
+        static long[] MergeSort(long[] left, long[] right)
+        {
+            
+            long[] buff = new long[left.Length + right.Length]; //буфер для отсортированного массива
+            
+            //индексы длины трех массивов
+
+            int i = 0;  //соединенный массив
+            int l = 0;  //левый массив
+            int r = 0;  //правый массив
+          
+            for (; i < buff.Length; i++)   //сортируем, сравнивая элементы
+            {
+                if (r >= right.Length)
+                {
+                buff[i] = left[l];
+                l++;
+                }
+                else if (l < left.Length && left[l] < right[r])
+                {
+                buff[i] = left[l];
+                l++;
+                }
+                else
+                {
+                buff[i] = right[r];
+                r++;
+                }
+            }
+            return buff;
+        }
+
+        static void RadixSort(long[] arr, int count) //сортировка методом "radix sort"
+        {
+            int i, j;
+            long[] temp = new long[count];
+            for (int shift = 63; shift > -1; --shift)
+            {
+                j = 0;
+                for (i = 0; i < count; ++i)
+                {
+                bool move = (arr[i] << shift) >= 0;
+                if (shift == 0 ? !move : move)
+                arr[i - j] = arr[i];
+                else
+                temp[j++] = arr[i];
+                }
+                Array.Copy(temp, 0, arr, count - j, j);
+            }
+        }
+
+
+        //запись в файл результатов сортировки агоритмом "выбора"
+
+        static void WriteFile_Selection_Sorting(int quantity, int kind, string time)
+        {
+            string                  path = path_out; // дирректория 
+
+            if          (kind is 3) path = path + "test.txt";
+            else
+            {
+                                    path = path + quantity.ToString() + "_";
+                if      (kind is 0) path = path + "худший вариант выбором.txt";
+                else if (kind is 1) path = path + "средний вариант выбором.txt";
+                else                path = path + "лучший вариант выбором.txt";
+            }
+            string symbols;// из числа массива в текст
+
+            FileStream stream = new FileStream(path, FileMode.Create, FileAccess.Write);
+            StreamWriter writer = new StreamWriter(stream);
+
+
+            if      (kind is 0) symbols = " размерность массива: " + quantity.ToString() + "  худший вариант -" + time;
+            else if (kind is 1) symbols = " размерность массива: " + quantity.ToString() + "  средний вариант -" + time;
+            else if (kind is 2) symbols = " размерность массива: " + quantity.ToString() + "  лучший вариант -" + time;
+            else                symbols = " размерность массива: " + quantity.ToString() + "  тестовый вариант -" + time;
+
+            try
+            {
+                writer.WriteLine(symbols);//записываем строку в файл
+            }
+            catch (IOException exc)
+            {
+                Console.WriteLine(exc.Message + "ошибка при выполнении!*.txt"); return;
+            }
+
+
+            for (int i = 0; i < quantity; i++) //записываем результаты сортировки
+            {
+                symbols = array[i].ToString(); //массив -> строка
+                try
+                { writer.WriteLine(symbols); } //записываем строку в файл
+                catch (IOException exc)
+                { Console.WriteLine(exc.Message + "ошибка при выполнении!*.txt"); return; }
+            }
+
+            writer.Close();
+            stream.Close();
+        }
+
+        //запись в файл результатов сортировки агоритмом "вставок"
+
+        static void WriteFile_Insertion_Sorting(int quantity, int kind, string time)
+        {
+            string                  path = path_out; // дирректория 
+
+            if          (kind is 3) path = path + "test.txt";
+            else
+            {
+                                    path = path + quantity.ToString() + "_";
+                if      (kind is 0) path = path + "худший вариант вставками.txt";
+                else if (kind is 1) path = path + "средний вариант вставками.txt";
+                else                path = path + "лучший вариант вставками.txt";
+            }
+            string symbols;// из числа массива в текст
+
+            FileStream stream = new FileStream(path, FileMode.Create, FileAccess.Write);
+            StreamWriter writer = new StreamWriter(stream);
+
+
+            if      (kind is 0) symbols = " размерность массива: " + quantity.ToString() + "  худший вариант -" + time;
+            else if (kind is 1) symbols = " размерность массива: " + quantity.ToString() + "  средний вариант -" + time;
+            else if (kind is 2) symbols = " размерность массива: " + quantity.ToString() + "  лучший вариант -" + time;
+            else                symbols = " размерность массива: " + quantity.ToString() + "  тестовый вариант -" + time;
+
+            try
+            {
+                writer.WriteLine(symbols);//записываем строку в файл
+            }
+            catch (IOException exc)
+            {
+                Console.WriteLine(exc.Message + "ошибка при выполнении!*.txt"); return;
+            }
+
+
+            for (int i = 0; i < quantity; i++) //записываем результаты сортировки
+            {
+                symbols = array[i].ToString(); //массив -> строка
+                try
+                { writer.WriteLine(symbols); } //записываем строку в файл
+                catch (IOException exc)
+                { Console.WriteLine(exc.Message + "ошибка при выполнении!*.txt"); return; }
+            }
+
+            writer.Close();
+            stream.Close();
+        }
+
+
+        //запись в файл результатов сортировки агоритмом "Шелла"
+
+        static void WriteFile_Shell_Sorting(int quantity, int kind, string time)
+        {
+            string                  path = path_out; // дирректория 
+
+            if          (kind is 3) path = path + "test.txt";
+            else
+            {
+                                    path = path + quantity.ToString() + "_";
+                if      (kind is 0) path = path + "худший вариант алгоритмом Шелла.txt";
+                else if (kind is 1) path = path + "средний вариант алгоритмом Шелла.txt";
+                else                path = path + "лучший вариант алгоритмом Шелла.txt";
+            }
+            string symbols;// из числа массива в текст
+
+            FileStream stream = new FileStream(path, FileMode.Create, FileAccess.Write);
+            StreamWriter writer = new StreamWriter(stream);
+
+
+            if      (kind is 0) symbols = " размерность массива: " + quantity.ToString() + "  худший вариант -" + time;
+            else if (kind is 1) symbols = " размерность массива: " + quantity.ToString() + "  средний вариант -" + time;
+            else if (kind is 2) symbols = " размерность массива: " + quantity.ToString() + "  лучший вариант -" + time;
+            else                symbols = " размерность массива: " + quantity.ToString() + "  тестовый вариант -" + time;
+
+            try
+            {
+                writer.WriteLine(symbols);//записываем строку в файл
+            }
+            catch (IOException exc)
+            {
+                Console.WriteLine(exc.Message + "ошибка при выполнении!*.txt"); return;
+            }
+
+
+            for (int i = 0; i < quantity; i++) //записываем результаты сортировки
+            {
+                symbols = array[i].ToString(); //массив -> строка
+                try
+                { writer.WriteLine(symbols); } //записываем строку в файл
+                catch (IOException exc)
+                { Console.WriteLine(exc.Message + "ошибка при выполнении!*.txt"); return; }
+            }
+
+            writer.Close();
+            stream.Close();
+        }
+
+
+        //запись в файл результатов сортировки агоритмом "quick sort"
+
+        static void WriteFile_Quick_Sorting(int quantity, int kind, string time)
+        {
+            string                  path = path_out; // дирректория 
+
+            if          (kind is 3) path = path + "test.txt";
+            else
+            {
+                                    path = path + quantity.ToString() + "_";
+                if      (kind is 0) path = path + "худший вариант алгоритмом quick sort.txt";
+                else if (kind is 1) path = path + "средний вариант алгоритмом quick sort.txt";
+                else                path = path + "лучший вариант алгоритмом quick sort.txt";
+            }
+            string symbols;// из числа массива в текст
+
+            FileStream stream = new FileStream(path, FileMode.Create, FileAccess.Write);
+            StreamWriter writer = new StreamWriter(stream);
+
+
+            if      (kind is 0) symbols = " размерность массива: " + quantity.ToString() + "  худший вариант -" + time;
+            else if (kind is 1) symbols = " размерность массива: " + quantity.ToString() + "  средний вариант -" + time;
+            else if (kind is 2) symbols = " размерность массива: " + quantity.ToString() + "  лучший вариант -" + time;
+            else                symbols = " размерность массива: " + quantity.ToString() + "  тестовый вариант -" + time;
+
+            try
+            {
+                writer.WriteLine(symbols);//записываем строку в файл
+            }
+            catch (IOException exc)
+            {
+                Console.WriteLine(exc.Message + "ошибка при выполнении!*.txt"); return;
+            }
+
+
+            for (int i = 0; i < quantity; i++) //записываем результаты сортировки
+            {
+                symbols = array[i].ToString(); //массив -> строка
+                try
+                { writer.WriteLine(symbols); } //записываем строку в файл
+                catch (IOException exc)
+                { Console.WriteLine(exc.Message + "ошибка при выполнении!*.txt"); return; }
+            }
+
+            writer.Close();
+            stream.Close();
+        }
+
+
+        //запись в файл результатов сортировки агоритмом "слияния"
+
+        static void WriteFile_Merge_Sorting(int quantity, int kind, string time)
+        {
+            string                  path = path_out; // дирректория 
+
+            if          (kind is 3) path = path + "test.txt";
+            else
+            {
+                                    path = path + quantity.ToString() + "_";
+                if      (kind is 0) path = path + "худший вариант алгоритмом слияния.txt";
+                else if (kind is 1) path = path + "средний вариант алгоритмом слияния.txt";
+                else                path = path + "лучший вариант алгоритмом слияния.txt";
+            }
+            string symbols;// из числа массива в текст
+
+            FileStream stream = new FileStream(path, FileMode.Create, FileAccess.Write);
+            StreamWriter writer = new StreamWriter(stream);
+
+
+            if      (kind is 0) symbols = " размерность массива: " + quantity.ToString() + "  худший вариант -" + time;
+            else if (kind is 1) symbols = " размерность массива: " + quantity.ToString() + "  средний вариант -" + time;
+            else if (kind is 2) symbols = " размерность массива: " + quantity.ToString() + "  лучший вариант -" + time;
+            else                symbols = " размерность массива: " + quantity.ToString() + "  тестовый вариант -" + time;
+
+            try
+            {
+                writer.WriteLine(symbols);//записываем строку в файл
+            }
+            catch (IOException exc)
+            {
+                Console.WriteLine(exc.Message + "ошибка при выполнении!*.txt"); return;
+            }
+
+
+            for (int i = 0; i < quantity; i++) //записываем результаты сортировки
+            {
+                symbols = array[i].ToString(); //массив -> строка
+                try
+                { writer.WriteLine(symbols); } //записываем строку в файл
+                catch (IOException exc)
+                { Console.WriteLine(exc.Message + "ошибка при выполнении!*.txt"); return; }
+            }
+
+            writer.Close();
+            stream.Close();
+        }
+
+
+        //запись в файл результатов сортировки агоритмом "слияния"
+
+        static void WriteFile_Radix_Sorting(int quantity, int kind, string time)
+        {
+            string                  path = path_out; // дирректория 
+
+            if          (kind is 3) path = path + "test.txt";
+            else
+            {
+                                    path = path + quantity.ToString() + "_";
+                if      (kind is 0) path = path + "худший вариант алгоритмом radix.txt";
+                else if (kind is 1) path = path + "средний вариант алгоритмом radix.txt";
+                else                path = path + "лучший вариант алгоритмом radix.txt";
+            }
+            string symbols;// из числа массива в текст
+
+            FileStream stream = new FileStream(path, FileMode.Create, FileAccess.Write);
+            StreamWriter writer = new StreamWriter(stream);
+
+
+            if      (kind is 0) symbols = " размерность массива: " + quantity.ToString() + "  худший вариант -" + time;
+            else if (kind is 1) symbols = " размерность массива: " + quantity.ToString() + "  средний вариант -" + time;
+            else if (kind is 2) symbols = " размерность массива: " + quantity.ToString() + "  лучший вариант -" + time;
+            else                symbols = " размерность массива: " + quantity.ToString() + "  тестовый вариант -" + time;
+
+            try
+            {
+                writer.WriteLine(symbols);//записываем строку в файл
+            }
+            catch (IOException exc)
+            {
+                Console.WriteLine(exc.Message + "ошибка при выполнении!*.txt"); return;
+            }
+
+
+            for (int i = 0; i < quantity; i++) //записываем результаты сортировки
+            {
+                symbols = array[i].ToString(); //массив -> строка
+                try
+                { writer.WriteLine(symbols); } //записываем строку в файл
+                catch (IOException exc)
+                { Console.WriteLine(exc.Message + "ошибка при выполнении!*.txt"); return; }
+            }
+
+            writer.Close();
+            stream.Close();
+        }
+
+
+
+    }
+
+
+
+}
+
+
