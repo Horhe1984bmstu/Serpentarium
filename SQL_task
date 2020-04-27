@@ -1,0 +1,6 @@
+SELECT Prod.product as prod_name_1, Cat.product as prod_name_2, category as cat_name
+
+FROM Prod LEFT JOIN Cat ON Cat.product = Prod.product
+
+ORDER BY Prod.product
+
