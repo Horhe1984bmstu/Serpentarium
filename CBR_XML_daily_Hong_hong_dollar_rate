@@ -1,0 +1,44 @@
+using System.Xml;
+using System;
+class Program
+{
+    static void Main(string[] args)
+    {
+        XmlDocument XML_Document = new XmlDocument();
+        XML_Document.Load("http://www.cbr.ru/scripts/XML_daily.asp");
+        // получим корневой элемент
+        XmlElement XML_Root = XML_Document.DocumentElement;
+        // проходим по узлам в корне
+        foreach(XmlNode XML_node in XML_Root)
+        {
+            // получаем атрибут name
+            if(XML_node.Attributes.Count>0)
+            {
+                XmlNode attr = XML_node.Attributes.GetNamedItem("ID");
+                if (attr.Value == "R01200")
+                {
+                    Console.WriteLine(attr.Value);
+
+                    // проходим по дочерним узлам элемента ID
+                    foreach (XmlNode childnode in XML_node.ChildNodes)
+                    {
+                        // если узел - Name
+                        if (childnode.Name == "Name")
+                        {
+                            Console.WriteLine("Валюта:" + childnode.InnerText);
+                        }
+                        // если узел - Value
+                        if (childnode.Name == "Value")
+                        {
+                            Console.WriteLine("Один гонконгский доллар равен: {0} российским рублям.", childnode.InnerText);
+                        }
+
+                    }
+                }
+            }
+          
+            
+        }
+        Console.ReadKey();
+    }
+}
